@@ -128,7 +128,7 @@ class TtContentController extends ActionController {
 	public function convertAction(TtContent $ce) {
 
 		$newsRecord = new \Tx_News_Domain_Model_News();
-		$newsRecord->setPid($this->settings['targetPid']);
+		$newsRecord->setPid((int) $this->settings['targetPid']);
 
 		if (NULL !== $this->settings['targetCategoryUid']) {
 			$categoryQuery = $this->categoryRepository->createQuery();
@@ -149,7 +149,8 @@ class TtContentController extends ActionController {
 
 		$newsRecord->setTitle($ce->getHeader());
 		$newsRecord->setBodytext($ce->getBodytext());
-		$newsRecord->setDatetime($ce->getCrdate());
+		$newsRecord->setDatetime($ce->getTstamp());
+		$newsRecord->setCrdate($ce->getCrdate());
 
 		if (NULL !== $ce->getImage()) {
 
@@ -173,6 +174,18 @@ class TtContentController extends ActionController {
 			'Success!',
 			FlashMessage::OK
 		);
+
+		if (NULL !== $this->settings['backupPid']) {
+
+			$ce->setPid((int)$this->settings['backupPid']);
+			$this->ttContentRepository->update($ce);
+
+			$this->addFlashMessage(
+				'Record ' . $ce->getHeader() . ' moved',
+				'Success!',
+				FlashMessage::INFO
+			);
+		}
 
 		$this->redirect('list');
 	}

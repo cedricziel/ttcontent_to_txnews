@@ -36,12 +36,12 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 class TtContent extends AbstractEntity {
 
 	/**
-	 * @var DateTime
+	 * @var int $crdate
 	 */
 	protected $crdate;
 
 	/**
-	 * @var DateTime
+	 * @var \DateTime $tstamp
 	 */
 	protected $tstamp;
 
@@ -166,7 +166,7 @@ class TtContent extends AbstractEntity {
 	protected $sorting;
 
 	/**
-	 * @return \DateTime
+	 * @return int
 	 */
 	public function getCrdate() {
 
@@ -174,7 +174,7 @@ class TtContent extends AbstractEntity {
 	}
 
 	/**
-	 * @param \DateTime $crdate
+	 * @param int $crdate
 	 *
 	 * @return void
 	 */
@@ -184,7 +184,7 @@ class TtContent extends AbstractEntity {
 	}
 
 	/**
-	 * @return DateTime
+	 * @return \DateTime
 	 */
 	public function getTstamp() {
 

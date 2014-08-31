@@ -19,6 +19,7 @@ config.tx_extbase{
                         altText.mapOnProperty = altText
                         titleText.mapOnProperty = titleText
                         crdate.mapOnProperty = crdate
+                        tstamp.mapOnProperty = tstamp
                     }
                 }
             }
