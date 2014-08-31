@@ -42,6 +42,12 @@ class TtContentController extends ActionController {
 	protected $ttContentRepository;
 
 	/**
+	 * @var \TYPO3\CMS\Extbase\Domain\Repository\CategoryRepository
+	 * @inject
+	 */
+	protected $categoryRepository;
+
+	/**
 	 * PID the converter should operate on
 	 *
 	 * @var int
@@ -54,6 +60,14 @@ class TtContentController extends ActionController {
 	public function injectTtContentRepository(\CedricZiel\TtcontentToTxnews\Domain\Repository\TtContentRepository $ttContentRepository) {
 
 		$this->ttContentRepository = $ttContentRepository;
+	}
+
+	/**
+	 * @param \TYPO3\CMS\Extbase\Domain\Repository\CategoryRepository $categoryRepository
+	 */
+	public function injectCategoryRepository(\TYPO3\CMS\Extbase\Domain\Repository\CategoryRepository $categoryRepository) {
+
+		$this->categoryRepository = $categoryRepository;
 	}
 
 	/**
@@ -85,6 +99,9 @@ class TtContentController extends ActionController {
 
 		DebuggerUtility::var_dump($this->settings);
 		//$this->redirect('list');
+
+		$newsRecord = new \Tx_News_Domain_Model_News();
+		$newsRecord->setPid($this->settings['targetPid']);
 	}
 
 }
