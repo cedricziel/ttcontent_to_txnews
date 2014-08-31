@@ -153,6 +153,10 @@ class TtContentController extends ActionController {
 				/** @var FileReference $image */
 				$newRef = new \Tx_News_Domain_Model_FileReference();
 				$newRef->setFileUid($image->getOriginalResource()->getUid());
+				$newRef->setAlternative($image->getOriginalResource()->getAlternative());
+				$newRef->setDescription($image->getOriginalResource()->getDescription());
+				$newRef->setLink($image->getOriginalResource()->getLink());
+				$newRef->setTitle($image->getOriginalResource()->getTitle());
 
 				$newsRecord->addFalMedia($newRef);
 			}
