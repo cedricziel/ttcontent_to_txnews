@@ -147,8 +147,6 @@ class TtContentController extends ActionController {
 		$newsRecord->setBodytext($ce->getBodytext());
 		$newsRecord->setDatetime($ce->getCrdate());
 
-		DebuggerUtility::var_dump($ce->getImage());
-
 		if (NULL !== $ce->getImage()) {
 
 			foreach ($ce->getImage() as $image) {
@@ -163,7 +161,5 @@ class TtContentController extends ActionController {
 		$this->newsRepository->add($newsRecord);
 
 		$this->redirect('list');
-		DebuggerUtility::var_dump($ce);
-		DebuggerUtility::var_dump($newsRecord);
 	}
 }
