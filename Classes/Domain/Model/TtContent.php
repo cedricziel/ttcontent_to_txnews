@@ -25,6 +25,7 @@ namespace CedricZiel\TtcontentToTxnews\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /**
  * Model of tt_content
@@ -70,7 +71,7 @@ class TtContent extends AbstractEntity {
 	protected $colPos;
 
 	/**
-	 * @var string
+	 * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference>
 	 */
 	protected $image;
 
@@ -100,7 +101,7 @@ class TtContent extends AbstractEntity {
 	protected $imageborder;
 
 	/**
-	 * @var string
+	 * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference>
 	 */
 	protected $media;
 
@@ -295,7 +296,7 @@ class TtContent extends AbstractEntity {
 	}
 
 	/**
-	 * @return string
+	 * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference>
 	 */
 	public function getImage() {
 
@@ -303,7 +304,7 @@ class TtContent extends AbstractEntity {
 	}
 
 	/**
-	 * @param $image
+	 * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference>
 	 *
 	 * @return void
 	 */
@@ -403,7 +404,7 @@ class TtContent extends AbstractEntity {
 	}
 
 	/**
-	 * @return string
+	 * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference>
 	 */
 	public function getMedia() {
 
@@ -411,11 +412,15 @@ class TtContent extends AbstractEntity {
 	}
 
 	/**
-	 * @param $media
+	 * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference> $media
 	 *
 	 * @return void
 	 */
 	public function setMedia($media) {
+
+		if (NULL === $this->media) {
+			$this->media = new ObjectStorage();
+		}
 
 		$this->media = $media;
 	}

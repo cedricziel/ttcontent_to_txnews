@@ -7,15 +7,18 @@ config.tx_extbase{
                 mapping {
                     tableName = tt_content
                     columns {
-                        pid.mapOnProperty               = pid
-                        sorting.mapOnProperty           = sorting
-                        CType.mapOnProperty             = CType
-                        header.mapOnProperty            = header
-                        header_link.mapOnProperty       = headerLink
-                        bodytext.mapOnProperty          = bodytext
-                        image.mapOnProperty             = image
-                        image_link.mapOnProperty        = imageLink
-                        colPos.mapOnProperty            = colPos
+                        pid.mapOnProperty = pid
+                        sorting.mapOnProperty = sorting
+                        CType.mapOnProperty = CType
+                        header.mapOnProperty = header
+                        header_link.mapOnProperty = headerLink
+                        bodytext.mapOnProperty = bodytext
+                        image.mapOnProperty = image
+                        image_link.mapOnProperty = imageLink
+                        colPos.mapOnProperty = colPos
+                        altText.mapOnProperty = altText
+                        titleText.mapOnProperty = titleText
+                        crdate.mapOnProperty = crdate
                     }
                 }
             }

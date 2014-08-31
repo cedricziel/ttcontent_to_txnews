@@ -27,7 +27,10 @@ namespace CedricZiel\TtcontentToTxnews\Controller;
  ***************************************************************/
 use CedricZiel\TtcontentToTxnews\Domain\Model\TtContent;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Domain\Model\Category;
+use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /**
@@ -42,10 +45,22 @@ class TtContentController extends ActionController {
 	protected $ttContentRepository;
 
 	/**
-	 * @var \TYPO3\CMS\Extbase\Domain\Repository\CategoryRepository
+	 * @var \Tx_News_Domain_Repository_CategoryRepository
 	 * @inject
 	 */
 	protected $categoryRepository;
+
+	/**
+	 * @var \Tx_News_Domain_Repository_NewsRepository
+	 * @inject
+	 */
+	protected $newsRepository;
+
+	/**
+	 * @var \Tx_News_Domain_Repository_FileRepository
+	 * @inject
+	 */
+	protected $fileRepository;
 
 	/**
 	 * PID the converter should operate on
@@ -53,6 +68,11 @@ class TtContentController extends ActionController {
 	 * @var int
 	 */
 	protected $pidOfOperation;
+
+	/**
+	 * @var \TYPO3\CMS\Core\Resource\ResourceFactory
+	 */
+	protected $resourceFactory;
 
 	/**
 	 * @param \CedricZiel\TtcontentToTxnews\Domain\Repository\TtContentRepository $ttContentRepository
@@ -63,11 +83,27 @@ class TtContentController extends ActionController {
 	}
 
 	/**
-	 * @param \TYPO3\CMS\Extbase\Domain\Repository\CategoryRepository $categoryRepository
+	 * @param \Tx_News_Domain_Repository_CategoryRepository $categoryRepository
 	 */
-	public function injectCategoryRepository(\TYPO3\CMS\Extbase\Domain\Repository\CategoryRepository $categoryRepository) {
+	public function injectCategoryRepository(\Tx_News_Domain_Repository_CategoryRepository $categoryRepository) {
 
 		$this->categoryRepository = $categoryRepository;
+	}
+
+	/**
+	 * @param \Tx_News_Domain_Repository_NewsRepository $newsRepository
+	 */
+	public function injectNewsRepository(\Tx_News_Domain_Repository_NewsRepository $newsRepository) {
+
+		$this->newsRepository = $newsRepository;
+	}
+
+	/**
+	 * @param \Tx_News_Domain_Repository_FileRepository $fileRepo
+	 */
+	public function injectFileRepository(\Tx_News_Domain_Repository_FileRepository $fileRepo) {
+
+		$this->fileRepository = $fileRepo;
 	}
 
 	/**
@@ -92,16 +128,52 @@ class TtContentController extends ActionController {
 		));
 	}
 
+	public function initializeConvertAction() {
+
+		$this->resourceFactory = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Resource\\ResourceFactory');
+	}
+
 	/**
 	 * @param TtContent $ce
 	 */
 	public function convertAction(TtContent $ce) {
 
-		DebuggerUtility::var_dump($this->settings);
-		//$this->redirect('list');
+		/** @var Category $category */
+		$category = NULL;
+		if (NULL !== $this->settings['targetCategoryUid']) {
+			$qResult = $this->categoryRepository->findByUid($this->settings['targetCategoryUid']);
+			$category = $qResult;
+		}
 
 		$newsRecord = new \Tx_News_Domain_Model_News();
 		$newsRecord->setPid($this->settings['targetPid']);
-	}
+		if (NULL !== $category) {
+			$categories = new ObjectStorage();
+			$categories->attach($category);
+			$newsRecord->setCategories($categories);
+		}
 
+		$newsRecord->setTitle($ce->getHeader());
+		$newsRecord->setBodytext($ce->getBodytext());
+		$newsRecord->setDatetime($ce->getCrdate());
+
+		DebuggerUtility::var_dump($ce->getImage());
+
+		if (NULL !== $ce->getImage()) {
+
+			foreach ($ce->getImage() as $image) {
+				/** @var FileReference $image */
+				$newRef = new \Tx_News_Domain_Model_FileReference();
+				$newRef->setFileUid($image->getOriginalResource()->getUid());
+
+				$newsRecord->addFalMedia($newRef);
+			}
+		}
+
+		$this->newsRepository->add($newsRecord);
+
+		$this->redirect('list');
+		DebuggerUtility::var_dump($ce);
+		DebuggerUtility::var_dump($newsRecord);
+	}
 }
