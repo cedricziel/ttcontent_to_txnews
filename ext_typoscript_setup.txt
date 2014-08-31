@@ -6,10 +6,19 @@ config.tx_extbase{
             CedricZiel\TtcontentToTxnews\Domain\Model\TtContent {
                 mapping {
                     tableName = tt_content
-                    recordType = Tx_TtcontentToTxnews_TtContent
+                    columns {
+                        pid.mapOnProperty               = pid
+                        sorting.mapOnProperty           = sorting
+                        CType.mapOnProperty             = CType
+                        header.mapOnProperty            = header
+                        header_link.mapOnProperty       = headerLink
+                        bodytext.mapOnProperty          = bodytext
+                        image.mapOnProperty             = image
+                        image_link.mapOnProperty        = imageLink
+                        colPos.mapOnProperty            = colPos
+                    }
                 }
             }
-            
-    	}
+        }
     }
 }

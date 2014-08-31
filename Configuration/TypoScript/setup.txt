@@ -1,12 +1,23 @@
-
- # Module configuration
+# Module configuration
 module.tx_ttcontenttotxnews {
-	persistence {
-		storagePid = {$module.tx_ttcontenttotxnews.persistence.storagePid}
-	}
-	view {
-		templateRootPath = {$module.tx_ttcontenttotxnews.view.templateRootPath}
-		partialRootPath = {$module.tx_ttcontenttotxnews.view.partialRootPath}
-		layoutRootPath = {$module.tx_ttcontenttotxnews.view.layoutRootPath}
-	}
+    persistence {
+        storagePid = {$module.tx_ttcontenttotxnews.persistence.storagePid}
+    }
+    view {
+        templateRootPath = {$module.tx_ttcontenttotxnews.view.templateRootPath}
+        partialRootPath = {$module.tx_ttcontenttotxnews.view.partialRootPath}
+        layoutRootPath = {$module.tx_ttcontenttotxnews.view.layoutRootPath}
+    }
+    settings {
+        targetCategoryUid = {$module.tx_ttcontenttotxnews.settings.targetCategoryUid}
+        targetPid = {$module.tx_ttcontenttotxnews.settings.targetPid}
+    }
+}
+
+plugin.tx_ttcontenttotxnews {
+
+    settings {
+        targetCategoryUid = {$module.tx_ttcontenttotxnews.settings.targetCategoryUid}
+        targetPid = {$module.tx_ttcontenttotxnews.settings.targetPid}
+    }
 }

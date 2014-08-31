@@ -1,7 +1,6 @@
 <?php
 namespace CedricZiel\TtcontentToTxnews\Controller;
 
-
 /***************************************************************
  *
  *  Copyright notice
@@ -26,11 +25,44 @@ namespace CedricZiel\TtcontentToTxnews\Controller;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use CedricZiel\TtcontentToTxnews\Domain\Model\TtContent;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /**
  * TtContentController
  */
-class TtContentController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController {
+class TtContentController extends ActionController {
+
+	/**
+	 * @var \CedricZiel\TtcontentToTxnews\Domain\Repository\TtContentRepository
+	 * @inject
+	 */
+	protected $ttContentRepository;
+
+	/**
+	 * PID the converter should operate on
+	 *
+	 * @var int
+	 */
+	protected $pidOfOperation;
+
+	/**
+	 * @param \CedricZiel\TtcontentToTxnews\Domain\Repository\TtContentRepository $ttContentRepository
+	 */
+	public function injectTtContentRepository(\CedricZiel\TtcontentToTxnews\Domain\Repository\TtContentRepository $ttContentRepository) {
+
+		$this->ttContentRepository = $ttContentRepository;
+	}
+
+	/**
+	 * Pulls in the PID
+	 */
+	public function initializeAction() {
+
+		$this->pidOfOperation = GeneralUtility::_GP('id');
+	}
 
 	/**
 	 * action list
@@ -38,8 +70,21 @@ class TtContentController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionContro
 	 * @return void
 	 */
 	public function listAction() {
-		$ttContents = $this->ttContentRepository->findAll();
-		$this->view->assign('ttContents', $ttContents);
+
+		$ttContents = $this->ttContentRepository->findByPid($this->pidOfOperation);
+		$this->view->assignMultiple(array(
+			'ttContents' => $ttContents,
+			'pid' => $this->pidOfOperation
+		));
+	}
+
+	/**
+	 * @param TtContent $ce
+	 */
+	public function convertAction(TtContent $ce) {
+
+		DebuggerUtility::var_dump($this->settings);
+		//$this->redirect('list');
 	}
 
 }

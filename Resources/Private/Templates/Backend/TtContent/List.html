@@ -1,0 +1,38 @@
+<f:layout name="Default"/>
+
+<f:section name="Main">
+    <h3>Content Elements on PID {pid}</h3>
+
+    <table class="t3-table">
+        <thead>
+        <tr>
+            <th>Header</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <f:for each="{ttContents}" as="ce">
+            <tr>
+                <td class="nowrap">
+                    <a href="#" onClick="Clickmenu.show('tt_content', '{ce.uid}', '1', '', '', ''); return false;">
+                        <f:be.buttons.icon
+                                icon="mimetypes-x-content-text-picture"
+                                title="Convert to news record"/>
+                        {ce.header} ({ce.uid})
+                    </a>
+                </td>
+                <td align="right" class="nowrap">
+                    <f:link.action
+                            action="convert"
+                            arguments="{ce: ce}">
+                        <f:be.buttons.icon
+                                icon="actions-system-refresh"
+                                title="Create new Foo"/>
+                        convert
+                    </f:link.action>
+                </td>
+            </tr>
+        </f:for>
+        </tbody>
+    </table>
+</f:section>

@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-	<file source-language="en" datatype="plaintext" original="messages" date="2014-08-31T19:02:27Z" product-name="ttcontent_to_txnews">
-		<header/>
-		<body>
-			<trans-unit id="tx_ttcontenttotxnews_domain_model_ttcontent">
-				<source>Tt Content</source>
-			</trans-unit>
-		</body>
-	</file>
+    <file source-language="en" datatype="plaintext" original="messages" date="2014-08-31T19:02:27Z"
+          product-name="ttcontent_to_txnews">
+        <header/>
+        <body>
+            <trans-unit id="tx_ttcontenttotxnews_domain_model_ttcontent">
+                <source>Tt Content</source>
+            </trans-unit>
+            <trans-unit id="be.csm.convertbutton">
+                <source>Convert Record to news entry</source>
+            </trans-unit>
+        </body>
+    </file>
 </xliff>

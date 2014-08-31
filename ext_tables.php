@@ -10,17 +10,21 @@ if (TYPO3_MODE === 'BE') {
 	 */
 	\TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
 		'CedricZiel.' . $_EXTKEY,
-		'tools',	 // Make module a submodule of 'tools'
-		'ttconv',	// Submodule key
-		'',						// Position
+		'web', // Make module a submodule of 'tools'
+		'ttconv', // Submodule key
+		'', // Position
 		array(
-			'TtContent' => 'list',
+			'TtContent' => 'list,convert',
 		),
 		array(
 			'access' => 'user,group',
-			'icon'   => 'EXT:' . $_EXTKEY . '/ext_icon.gif',
+			'icon' => 'EXT:' . $_EXTKEY . '/ext_icon.gif',
 			'labels' => 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang_ttconv.xlf',
 		)
+	);
+
+	$GLOBALS['TBE_MODULES_EXT']['xMOD_alt_clickmenu']['extendCMclasses'][] = array(
+		'name' => 'CedricZiel\\TtcontentToTxnews\\Service\\ContextMenuOptions'
 	);
 
 }
@@ -36,7 +40,7 @@ if (!isset($GLOBALS['TCA']['tt_content']['ctrl']['type'])) {
 	$tempColumns = array();
 	$tempColumns[$GLOBALS['TCA']['tt_content']['ctrl']['type']] = array(
 		'exclude' => 1,
-		'label'   => 'LLL:EXT:ttcontent_to_txnews/Resources/Private/Language/locallang_db.xlf:tx_ttcontenttotxnews.tx_extbase_type',
+		'label' => 'LLL:EXT:ttcontent_to_txnews/Resources/Private/Language/locallang_db.xlf:tx_ttcontenttotxnews.tx_extbase_type',
 		'config' => array(
 			'type' => 'select',
 			'items' => array(),
@@ -51,6 +55,6 @@ $GLOBALS['TCA']['tt_content']['types']['Tx_TtcontentToTxnews_TtContent']['showit
 $GLOBALS['TCA']['tt_content']['types']['Tx_TtcontentToTxnews_TtContent']['showitem'] .= ',--div--;LLL:EXT:ttcontent_to_txnews/Resources/Private/Language/locallang_db.xlf:tx_ttcontenttotxnews_domain_model_ttcontent,';
 $GLOBALS['TCA']['tt_content']['types']['Tx_TtcontentToTxnews_TtContent']['showitem'] .= '';
 
-$GLOBALS['TCA']['tt_content']['columns'][$TCA['tt_content']['ctrl']['type']]['config']['items'][] = array('LLL:EXT:ttcontent_to_txnews/Resources/Private/Language/locallang_db.xlf:tt_content.tx_extbase_type.Tx_TtcontentToTxnews_TtContent','Tx_TtcontentToTxnews_TtContent');
+$GLOBALS['TCA']['tt_content']['columns'][$TCA['tt_content']['ctrl']['type']]['config']['items'][] = array('LLL:EXT:ttcontent_to_txnews/Resources/Private/Language/locallang_db.xlf:tt_content.tx_extbase_type.Tx_TtcontentToTxnews_TtContent', 'Tx_TtcontentToTxnews_TtContent');
 
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('tt_content', $GLOBALS['TCA']['tt_content']['ctrl']['type'],'','after:' . $TCA['tt_content']['ctrl']['label']);
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('tt_content', $GLOBALS['TCA']['tt_content']['ctrl']['type'], '', 'after:' . $TCA['tt_content']['ctrl']['label']);
