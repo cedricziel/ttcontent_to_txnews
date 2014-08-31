@@ -70,11 +70,6 @@ class TtContentController extends ActionController {
 	protected $pidOfOperation;
 
 	/**
-	 * @var \TYPO3\CMS\Core\Resource\ResourceFactory
-	 */
-	protected $resourceFactory;
-
-	/**
 	 * @param \CedricZiel\TtcontentToTxnews\Domain\Repository\TtContentRepository $ttContentRepository
 	 */
 	public function injectTtContentRepository(\CedricZiel\TtcontentToTxnews\Domain\Repository\TtContentRepository $ttContentRepository) {
@@ -126,11 +121,6 @@ class TtContentController extends ActionController {
 			'ttContents' => $ttContents,
 			'pid' => $this->pidOfOperation
 		));
-	}
-
-	public function initializeConvertAction() {
-
-		$this->resourceFactory = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Resource\\ResourceFactory');
 	}
 
 	/**
