@@ -26,12 +26,12 @@ namespace CedricZiel\TtcontentToTxnews\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use CedricZiel\TtcontentToTxnews\Domain\Model\TtContent;
+use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Domain\Model\Category;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /**
  * TtContentController
@@ -159,6 +159,12 @@ class TtContentController extends ActionController {
 		}
 
 		$this->newsRepository->add($newsRecord);
+
+		$this->addFlashMessage(
+			'Record ' . $newsRecord->getTitle() . ' migrated',
+			'Success!',
+			FlashMessage::OK
+		);
 
 		$this->redirect('list');
 	}
