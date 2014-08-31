@@ -9,15 +9,15 @@ module.tx_ttcontenttotxnews {
         layoutRootPath = {$module.tx_ttcontenttotxnews.view.layoutRootPath}
     }
     settings {
-        targetCategoryUid = {$module.tx_ttcontenttotxnews.settings.targetCategoryUid}
-        targetPid = {$module.tx_ttcontenttotxnews.settings.targetPid}
+        targetCategoryUid = {$plugin.tx_ttcontenttotxnews.settings.targetCategoryUid}
+        targetPid = {$plugin.tx_ttcontenttotxnews.settings.targetPid}
     }
 }
 
 plugin.tx_ttcontenttotxnews {
 
     settings {
-        targetCategoryUid = {$module.tx_ttcontenttotxnews.settings.targetCategoryUid}
-        targetPid = {$module.tx_ttcontenttotxnews.settings.targetPid}
+        targetCategoryUid = {$plugin.tx_ttcontenttotxnews.settings.targetCategoryUid}
+        targetPid = {$plugin.tx_ttcontenttotxnews.settings.targetPid}
     }
 }
