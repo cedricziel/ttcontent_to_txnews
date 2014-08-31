@@ -11,6 +11,7 @@ module.tx_ttcontenttotxnews {
     settings {
         targetCategoryUid = {$plugin.tx_ttcontenttotxnews.settings.targetCategoryUid}
         targetPid = {$plugin.tx_ttcontenttotxnews.settings.targetPid}
+        backupPid = {$plugin.tx_ttcontenttotxnews.settings.backupPid}
     }
 }
 
@@ -19,5 +20,6 @@ plugin.tx_ttcontenttotxnews {
     settings {
         targetCategoryUid = {$plugin.tx_ttcontenttotxnews.settings.targetCategoryUid}
         targetPid = {$plugin.tx_ttcontenttotxnews.settings.targetPid}
+        backupPid = {$plugin.tx_ttcontenttotxnews.settings.backupPid}
     }
 }

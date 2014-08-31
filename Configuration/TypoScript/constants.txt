@@ -1,9 +1,11 @@
 plugin.tx_ttcontenttotxnews {
     settings {
-        # cat=plugin.tx_ttcontenttotxnews//a; type=string; label=Default conversion category UID
+        # cat=plugin.tx_ttcontenttotxnews//a; type=string; label=Default conversion category UID; Comma separated list
         targetCategoryUid =
         # cat=plugin.tx_ttcontenttotxnews//a; type=string; label=Default PID
         targetPid =
+        # cat=plugin.tx_ttcontenttotxnews//a; type=string; label=Backup PID
+        backupPid =
     }
 }
 module.tx_ttcontenttotxnews {
