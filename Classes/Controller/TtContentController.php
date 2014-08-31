@@ -28,7 +28,6 @@ namespace CedricZiel\TtcontentToTxnews\Controller;
 use CedricZiel\TtcontentToTxnews\Domain\Model\TtContent;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Domain\Model\Category;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
@@ -128,19 +127,24 @@ class TtContentController extends ActionController {
 	 */
 	public function convertAction(TtContent $ce) {
 
-		/** @var Category $category */
-		$category = NULL;
-		if (NULL !== $this->settings['targetCategoryUid']) {
-			$qResult = $this->categoryRepository->findByUid($this->settings['targetCategoryUid']);
-			$category = $qResult;
-		}
-
 		$newsRecord = new \Tx_News_Domain_Model_News();
 		$newsRecord->setPid($this->settings['targetPid']);
-		if (NULL !== $category) {
-			$categories = new ObjectStorage();
-			$categories->attach($category);
-			$newsRecord->setCategories($categories);
+
+		if (NULL !== $this->settings['targetCategoryUid']) {
+			$categoryQuery = $this->categoryRepository->createQuery();
+			$categoriesFromDb = $categoryQuery->matching(
+				$categoryQuery->in(
+					'uid',
+					explode(',', $this->settings['targetCategoryUid'])
+				))->execute();
+
+			if (NULL !== $categoriesFromDb) {
+				$categories = new ObjectStorage();
+				foreach ($categoriesFromDb as $categoryFromDb) {
+					$categories->attach($categoryFromDb);
+				}
+				$newsRecord->setCategories($categories);
+			}
 		}
 
 		$newsRecord->setTitle($ce->getHeader());
