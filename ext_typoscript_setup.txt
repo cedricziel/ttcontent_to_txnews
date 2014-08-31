@@ -1,0 +1,15 @@
+
+config.tx_extbase{
+    persistence{
+        classes{
+
+            CedricZiel\TtcontentToTxnews\Domain\Model\TtContent {
+                mapping {
+                    tableName = tt_content
+                    recordType = Tx_TtcontentToTxnews_TtContent
+                }
+            }
+            
+    	}
+    }
+}
