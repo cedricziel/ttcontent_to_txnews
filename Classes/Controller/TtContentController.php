@@ -17,16 +17,13 @@ namespace CedricZiel\TtcontentToTxnews\Controller;
 
 use CedricZiel\TtcontentToTxnews\Domain\Model\TtContent;
 use CedricZiel\TtcontentToTxnews\Domain\Repository\TtContentRepository;
-use GeorgRinger\News\Domain\Model\FileReference as NewsFileReference;
-use GeorgRinger\News\Domain\Model\News;
+use CedricZiel\TtcontentToTxnews\Service\TtContentToNewsConverter;
 use GeorgRinger\News\Domain\Repository\CategoryRepository;
 use GeorgRinger\News\Domain\Repository\FileRepository;
 use GeorgRinger\News\Domain\Repository\NewsRepository;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
-use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
 
 class TtContentController extends ActionController
@@ -38,28 +35,22 @@ class TtContentController extends ActionController
     protected $ttContentRepository;
 
     /**
-     * @var \GeorgRinger\News\Domain\Repository\CategoryRepository
-     * @inject
-     */
-    protected $categoryRepository;
-
-    /**
      * @var \GeorgRinger\News\Domain\Repository\NewsRepository
      * @inject
      */
     protected $newsRepository;
 
     /**
-     * @var \GeorgRinger\News\Domain\Repository\FileRepository
-     * @inject
-     */
-    protected $fileRepository;
-
-    /**
      * @var \TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface
      * @inject
      */
     protected $persistenceManager;
+
+    /**
+     * @var \CedricZiel\TtcontentToTxnews\Service\TtContentToNewsConverter
+     * @inject
+     */
+    protected $ttContentConverter;
 
     /**
      * PID the converter should operate on
@@ -77,27 +68,11 @@ class TtContentController extends ActionController
     }
 
     /**
-     * @param \GeorgRinger\News\Domain\Repository\CategoryRepository $categoryRepository
-     */
-    public function injectCategoryRepository(CategoryRepository $categoryRepository)
-    {
-        $this->categoryRepository = $categoryRepository;
-    }
-
-    /**
      * @param \GeorgRinger\News\Domain\Repository\NewsRepository $newsRepository
      */
     public function injectNewsRepository(NewsRepository $newsRepository)
     {
         $this->newsRepository = $newsRepository;
-    }
-
-    /**
-     * @param \GeorgRinger\News\Domain\Repository\FileRepository $fileRepo
-     */
-    public function injectFileRepository(FileRepository $fileRepo)
-    {
-        $this->fileRepository = $fileRepo;
     }
 
     /**
@@ -109,13 +84,24 @@ class TtContentController extends ActionController
     }
 
     /**
+     * @param \CedricZiel\TtcontentToTxnews\Service\TtContentToNewsConverter $converter
+     */
+    public function injectTtContentConverter(TtContentToNewsConverter $converter)
+    {
+        $this->ttContentConverter = $converter;
+    }
+
+    /**
      * Pulls in the PID
      */
     public function initializeAction()
     {
         $this->pidOfOperation = GeneralUtility::_GP('id');
 
-        $querySettings = $this->ttContentRepository->createQuery()->getQuerySettings();
+        $querySettings = $this->ttContentRepository
+            ->createQuery()
+            ->getQuerySettings();
+
         $querySettings->setIgnoreEnableFields(true)
             ->setRespectStoragePage(false)
             ->setRespectSysLanguage(false);
@@ -150,64 +136,7 @@ class TtContentController extends ActionController
      */
     public function convertAction(TtContent $ce)
     {
-        $newsRecord = new News();
-
-        if ((int) $this->settings['targetPid'] !== 0) {
-            $newsRecord->setPid((int) $this->settings['targetPid']);
-        } else {
-            $newsRecord->setPid($this->pidOfOperation);
-        }
-
-        if (null !== $this->settings['targetCategoryUid']) {
-            $categoryQuery = $this->categoryRepository->createQuery();
-            $categoriesFromDb = $categoryQuery->matching(
-                $categoryQuery->in(
-                    'uid',
-                    explode(',', $this->settings['targetCategoryUid'])
-                )
-            )->execute();
-
-            if (null !== $categoriesFromDb) {
-                $categories = new ObjectStorage();
-                foreach ($categoriesFromDb as $categoryFromDb) {
-                    $categories->attach($categoryFromDb);
-                }
-                $newsRecord->setCategories($categories);
-            }
-        }
-
-        $newsRecord->setTitle('CONVERTED: ' . $ce->getHeader());
-        $newsRecord->setBodytext($ce->getBodytext());
-        $newsRecord->setDatetime($ce->getTstamp());
-        $newsRecord->setCrdate($ce->getCrdate());
-
-        if (null !== $ce->getImage()) {
-            foreach ($ce->getImage() as $image) {
-                /** @var FileReference $image */
-                $newRef = new NewsFileReference();
-                $newRef->setFileUid($image->getOriginalResource()->getUid());
-                $newRef->setAlternative($image->getOriginalResource()->getAlternative());
-                $newRef->setDescription($image->getOriginalResource()->getDescription());
-                $newRef->setLink($image->getOriginalResource()->getLink());
-                $newRef->setTitle($image->getOriginalResource()->getTitle());
-
-                $newsRecord->addFalMedia($newRef);
-            }
-        }
-
-        if (null !== $ce->getAssets()) {
-            foreach ($ce->getAssets() as $image) {
-                /** @var FileReference $image */
-                $newRef = new NewsFileReference();
-                $newRef->setFileUid($image->getOriginalResource()->getUid());
-                $newRef->setAlternative($image->getOriginalResource()->getAlternative());
-                $newRef->setDescription($image->getOriginalResource()->getDescription());
-                $newRef->setLink($image->getOriginalResource()->getLink());
-                $newRef->setTitle($image->getOriginalResource()->getTitle());
-
-                $newsRecord->addFalMedia($newRef);
-            }
-        }
+        $newsRecord = $this->ttContentConverter->convertSingleEntity($ce);
 
         $this->newsRepository->add($newsRecord);
 
