@@ -13,6 +13,7 @@ config.tx_extbase{
                         bodytext.mapOnProperty = bodytext
                         image.mapOnProperty = image
                         assets.mapOnProperty = assets
+                        media.mapOnProperty = media
                         image_link.mapOnProperty = imageLink
                         colPos.mapOnProperty = colPos
                         altText.mapOnProperty = altText
