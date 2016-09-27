@@ -2,7 +2,7 @@
 
 namespace CedricZiel\TtcontentToTxnews\Controller;
 
-/**
+/*
  * This file is part of the TYPO3 CMS project.
  *
  * It is free software; you can redistribute it and/or modify it under
@@ -16,6 +16,12 @@ namespace CedricZiel\TtcontentToTxnews\Controller;
  */
 
 use CedricZiel\TtcontentToTxnews\Domain\Model\TtContent;
+use CedricZiel\TtcontentToTxnews\Domain\Repository\TtContentRepository;
+use GeorgRinger\News\Domain\Model\FileReference as NewsFileReference;
+use GeorgRinger\News\Domain\Model\News;
+use GeorgRinger\News\Domain\Repository\CategoryRepository;
+use GeorgRinger\News\Domain\Repository\FileRepository;
+use GeorgRinger\News\Domain\Repository\NewsRepository;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
@@ -24,7 +30,6 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 class TtContentController extends ActionController
 {
-
     /**
      * @var \CedricZiel\TtcontentToTxnews\Domain\Repository\TtContentRepository
      * @inject
@@ -32,19 +37,19 @@ class TtContentController extends ActionController
     protected $ttContentRepository;
 
     /**
-     * @var \Tx_News_Domain_Repository_CategoryRepository
+     * @var \GeorgRinger\News\Domain\Repository\CategoryRepository
      * @inject
      */
     protected $categoryRepository;
 
     /**
-     * @var \Tx_News_Domain_Repository_NewsRepository
+     * @var \GeorgRinger\News\Domain\Repository\NewsRepository
      * @inject
      */
     protected $newsRepository;
 
     /**
-     * @var \Tx_News_Domain_Repository_FileRepository
+     * @var \GeorgRinger\News\Domain\Repository\FileRepository
      * @inject
      */
     protected $fileRepository;
@@ -59,31 +64,31 @@ class TtContentController extends ActionController
     /**
      * @param \CedricZiel\TtcontentToTxnews\Domain\Repository\TtContentRepository $ttContentRepository
      */
-    public function injectTtContentRepository(\CedricZiel\TtcontentToTxnews\Domain\Repository\TtContentRepository $ttContentRepository)
+    public function injectTtContentRepository(TtContentRepository $ttContentRepository)
     {
         $this->ttContentRepository = $ttContentRepository;
     }
 
     /**
-     * @param \Tx_News_Domain_Repository_CategoryRepository $categoryRepository
+     * @param \GeorgRinger\News\Domain\Repository\CategoryRepository $categoryRepository
      */
-    public function injectCategoryRepository(\Tx_News_Domain_Repository_CategoryRepository $categoryRepository)
+    public function injectCategoryRepository(CategoryRepository $categoryRepository)
     {
         $this->categoryRepository = $categoryRepository;
     }
 
     /**
-     * @param \Tx_News_Domain_Repository_NewsRepository $newsRepository
+     * @param \GeorgRinger\News\Domain\Repository\NewsRepository $newsRepository
      */
-    public function injectNewsRepository(\Tx_News_Domain_Repository_NewsRepository $newsRepository)
+    public function injectNewsRepository(NewsRepository $newsRepository)
     {
         $this->newsRepository = $newsRepository;
     }
 
     /**
-     * @param \Tx_News_Domain_Repository_FileRepository $fileRepo
+     * @param \GeorgRinger\News\Domain\Repository\FileRepository $fileRepo
      */
-    public function injectFileRepository(\Tx_News_Domain_Repository_FileRepository $fileRepo)
+    public function injectFileRepository(FileRepository $fileRepo)
     {
         $this->fileRepository = $fileRepo;
     }
@@ -97,8 +102,6 @@ class TtContentController extends ActionController
     }
 
     /**
-     * action list
-     *
      * @return void
      */
     public function listAction()
@@ -115,7 +118,7 @@ class TtContentController extends ActionController
      */
     public function convertAction(TtContent $ce)
     {
-        $newsRecord = new \Tx_News_Domain_Model_News();
+        $newsRecord = new News();
         $newsRecord->setPid((int) $this->settings['targetPid']);
 
         if (null !== $this->settings['targetCategoryUid']) {
@@ -143,7 +146,7 @@ class TtContentController extends ActionController
         if (null !== $ce->getImage()) {
             foreach ($ce->getImage() as $image) {
                 /** @var FileReference $image */
-                $newRef = new \Tx_News_Domain_Model_FileReference();
+                $newRef = new NewsFileReference();
                 $newRef->setFileUid($image->getOriginalResource()->getUid());
                 $newRef->setAlternative($image->getOriginalResource()->getAlternative());
                 $newRef->setDescription($image->getOriginalResource()->getDescription());
