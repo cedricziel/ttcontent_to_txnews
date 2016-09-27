@@ -176,7 +176,7 @@ class TtContentController extends ActionController
             }
         }
 
-        $newsRecord->setTitle('CONVERTED: '.$ce->getHeader());
+        $newsRecord->setTitle('CONVERTED: ' . $ce->getHeader());
         $newsRecord->setBodytext($ce->getBodytext());
         $newsRecord->setDatetime($ce->getTstamp());
         $newsRecord->setCrdate($ce->getCrdate());
