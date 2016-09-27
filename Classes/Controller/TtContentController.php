@@ -27,6 +27,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
 
 class TtContentController extends ActionController
 {
@@ -53,6 +54,12 @@ class TtContentController extends ActionController
      * @inject
      */
     protected $fileRepository;
+
+    /**
+     * @var \TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface
+     * @inject
+     */
+    protected $persistenceManager;
 
     /**
      * PID the converter should operate on
@@ -94,11 +101,26 @@ class TtContentController extends ActionController
     }
 
     /**
+     * @param \TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface $persistenceManager
+     */
+    public function injectPersistenceManagerRepository(PersistenceManagerInterface $persistenceManager)
+    {
+        $this->persistenceManager = $persistenceManager;
+    }
+
+    /**
      * Pulls in the PID
      */
     public function initializeAction()
     {
         $this->pidOfOperation = GeneralUtility::_GP('id');
+
+        $querySettings = $this->ttContentRepository->createQuery()->getQuerySettings();
+        $querySettings->setIgnoreEnableFields(true)
+            ->setRespectStoragePage(false)
+            ->setRespectSysLanguage(false);
+
+        $this->ttContentRepository->setDefaultQuerySettings($querySettings);
     }
 
     /**
@@ -115,13 +137,26 @@ class TtContentController extends ActionController
         );
     }
 
+    public function initializeConvertAction()
+    {
+        $contentElementUid = $this->request->getArgument('ce');
+        $contentElement = $this->ttContentRepository->findOneByUid((int) $contentElementUid);
+
+        $this->request->setArgument('ce', $contentElement);
+    }
+
     /**
-     * @param TtContent $ce
+     * @param \CedricZiel\TtcontentToTxnews\Domain\Model\TtContent $ce
      */
     public function convertAction(TtContent $ce)
     {
         $newsRecord = new News();
-        $newsRecord->setPid((int) $this->settings['targetPid']);
+
+        if ((int) $this->settings['targetPid'] !== 0) {
+            $newsRecord->setPid((int) $this->settings['targetPid']);
+        } else {
+            $newsRecord->setPid($this->pidOfOperation);
+        }
 
         if (null !== $this->settings['targetCategoryUid']) {
             $categoryQuery = $this->categoryRepository->createQuery();
@@ -160,6 +195,20 @@ class TtContentController extends ActionController
             }
         }
 
+        if (null !== $ce->getAssets()) {
+            foreach ($ce->getAssets() as $image) {
+                /** @var FileReference $image */
+                $newRef = new NewsFileReference();
+                $newRef->setFileUid($image->getOriginalResource()->getUid());
+                $newRef->setAlternative($image->getOriginalResource()->getAlternative());
+                $newRef->setDescription($image->getOriginalResource()->getDescription());
+                $newRef->setLink($image->getOriginalResource()->getLink());
+                $newRef->setTitle($image->getOriginalResource()->getTitle());
+
+                $newsRecord->addFalMedia($newRef);
+            }
+        }
+
         $this->newsRepository->add($newsRecord);
 
         $this->addFlashMessage(
@@ -168,9 +217,13 @@ class TtContentController extends ActionController
             FlashMessage::OK
         );
 
-        if (null !== $this->settings['backupPid']) {
+        $this->persistenceManager->persistAll();
+
+        if (null !== $this->settings['backupPid'] && '' !== $this->settings['backupPid']) {
             $ce->setPid((int) $this->settings['backupPid']);
             $this->ttContentRepository->update($ce);
+
+            $this->persistenceManager->persistAll();
 
             $this->addFlashMessage(
                 'Record ' . $ce->getHeader() . ' moved',
