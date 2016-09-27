@@ -16,7 +16,7 @@
         "checkstyle-fix": "php-cs-fixer --config-file=.php_cs fix",
         "post-autoload-dump": [
             "mkdir -p .Build/Web/typo3conf/ext/",
-            "[ -L .Build/Web/typo3conf/ext/news ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/news"
+            "[ -L .Build/Web/typo3conf/ext/ttcontent_to_txnews ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/ttcontent_to_txnews"
         ]
     },
     "replace": {
