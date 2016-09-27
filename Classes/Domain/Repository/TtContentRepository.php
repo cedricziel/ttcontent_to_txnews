@@ -31,10 +31,16 @@ class TtContentRepository extends Repository
     public function findByPid($pidOfOperation)
     {
         $query = $this->createQuery();
-        $query->getQuerySettings()->setRespectStoragePage(false);
 
-        return $query->matching(
+        $query->getQuerySettings()
+            ->setRespectStoragePage(false)
+            ->setRespectSysLanguage(false)
+            ->setIgnoreEnableFields(true);
+
+        $query->matching(
             $query->equals('pid', $pidOfOperation)
-        )->execute();
+        );
+
+        return $query->execute();
     }
 }
