@@ -424,7 +424,7 @@ class TtContent extends AbstractEntity
      */
     public function getAssets()
     {
-        return $this->media;
+        return $this->assets;
     }
 
     /**
