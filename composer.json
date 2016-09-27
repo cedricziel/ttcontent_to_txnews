@@ -12,6 +12,9 @@
     "require": {
         "typo3/cms": ">=7.6.0,<8.9.99"
     },
+    "require-dev": {
+        "phpunit/phpunit": "4.*|5.*"
+    },
     "scripts": {
         "checkstyle-fix": "php-cs-fixer --config-file=.php_cs fix",
         "post-autoload-dump": [
