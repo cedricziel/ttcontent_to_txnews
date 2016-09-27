@@ -20,4 +20,4 @@ php php-cs-fixer.phar --config-file=.php_cs fix
 
 ## License
 
-MIT
+GNU GENERAL PUBLIC LICENSE Version 3
