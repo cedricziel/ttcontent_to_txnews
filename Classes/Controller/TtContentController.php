@@ -106,11 +106,13 @@ class TtContentController extends ActionController
      */
     public function listAction()
     {
-        $ttContents = $this->ttContentRepository->findByPid($this->pidOfOperation);
-        $this->view->assignMultiple([
-            'ttContents' => $ttContents,
-            'pid' => $this->pidOfOperation
-        ]);
+        $ttContents = $this->ttContentRepository->findByPid((int) $this->pidOfOperation);
+        $this->view->assignMultiple(
+            [
+                'ttContents' => $ttContents,
+                'pid'        => $this->pidOfOperation,
+            ]
+        );
     }
 
     /**
@@ -127,7 +129,8 @@ class TtContentController extends ActionController
                 $categoryQuery->in(
                     'uid',
                     explode(',', $this->settings['targetCategoryUid'])
-                ))->execute();
+                )
+            )->execute();
 
             if (null !== $categoriesFromDb) {
                 $categories = new ObjectStorage();
@@ -138,7 +141,7 @@ class TtContentController extends ActionController
             }
         }
 
-        $newsRecord->setTitle($ce->getHeader());
+        $newsRecord->setTitle('CONVERTED: '.$ce->getHeader());
         $newsRecord->setBodytext($ce->getBodytext());
         $newsRecord->setDatetime($ce->getTstamp());
         $newsRecord->setCrdate($ce->getCrdate());
@@ -166,7 +169,7 @@ class TtContentController extends ActionController
         );
 
         if (null !== $this->settings['backupPid']) {
-            $ce->setPid((int)$this->settings['backupPid']);
+            $ce->setPid((int) $this->settings['backupPid']);
             $this->ttContentRepository->update($ce);
 
             $this->addFlashMessage(

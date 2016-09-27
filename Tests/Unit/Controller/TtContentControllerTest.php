@@ -1,68 +1,63 @@
 <?php
+
 namespace CedricZiel\TtcontentToTxnews\Tests\Unit\Controller;
 
-/***************************************************************
- *  Copyright notice
+/*
+ * This file is part of the TYPO3 CMS project.
  *
- *  (c) 2014 Cedric Ziel <cedric@cedric-ziel.com>
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
  *
- *  All rights reserved
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
  *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
-
-/**
- * Test case for class CedricZiel\TtcontentToTxnews\Controller\TtContentController.
- *
- * @author Cedric Ziel <cedric@cedric-ziel.com>
+ * The TYPO3 project - inspiring people to share!
  */
-class TtContentControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
-{
 
+use CedricZiel\TtcontentToTxnews\Controller\TtContentController;
+use TYPO3\CMS\Core\Tests\UnitTestCase;
+use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+
+class TtContentControllerTest extends UnitTestCase
+{
     /**
-     * @var \CedricZiel\TtcontentToTxnews\Controller\TtContentController
+     * @var TtContentController
      */
     protected $subject = null;
-
-    protected function setUp()
-    {
-        $this->subject = $this->getMock('CedricZiel\\TtcontentToTxnews\\Controller\\TtContentController', ['redirect', 'forward', 'addFlashMessage'], [], '', false);
-    }
-
-    protected function tearDown()
-    {
-        unset($this->subject);
-    }
 
     /**
      * @test
      */
     public function listActionFetchesAllTtContentsFromRepositoryAndAssignsThemToView()
     {
-        $allTtContents = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage', [], [], '', false);
+        $allTtContents = $this->getMock(ObjectStorage::class, [], [], '', false);
 
         $ttContentRepository = $this->getMock('', ['findAll'], [], '', false);
         $ttContentRepository->expects($this->once())->method('findAll')->will($this->returnValue($allTtContents));
         $this->inject($this->subject, 'ttContentRepository', $ttContentRepository);
 
-        $view = $this->getMock('TYPO3\\CMS\\Extbase\\Mvc\\View\\ViewInterface');
+        $view = $this->getMock(ViewInterface::class);
         $view->expects($this->once())->method('assign')->with('ttContents', $allTtContents);
         $this->inject($this->subject, 'view', $view);
 
         $this->subject->listAction();
+    }
+
+    protected function setUp()
+    {
+        $this->subject = $this->getMock(
+            TtContentController::class,
+            ['redirect', 'forward', 'addFlashMessage'],
+            [],
+            '',
+            false
+        );
+    }
+
+    protected function tearDown()
+    {
+        unset($this->subject);
     }
 }

@@ -4,9 +4,9 @@ module.tx_ttcontenttotxnews {
         storagePid = {$module.tx_ttcontenttotxnews.persistence.storagePid}
     }
     view {
-        templateRootPath = {$module.tx_ttcontenttotxnews.view.templateRootPath}
-        partialRootPath = {$module.tx_ttcontenttotxnews.view.partialRootPath}
-        layoutRootPath = {$module.tx_ttcontenttotxnews.view.layoutRootPath}
+        templateRootPaths.10 = {$module.tx_ttcontenttotxnews.view.templateRootPath}
+        partialRootPaths.10 = {$module.tx_ttcontenttotxnews.view.partialRootPath}
+        layoutRootPaths.10 = {$module.tx_ttcontenttotxnews.view.layoutRootPath}
     }
     settings {
         targetCategoryUid = {$plugin.tx_ttcontenttotxnews.settings.targetCategoryUid}
@@ -16,7 +16,6 @@ module.tx_ttcontenttotxnews {
 }
 
 plugin.tx_ttcontenttotxnews {
-
     settings {
         targetCategoryUid = {$plugin.tx_ttcontenttotxnews.settings.targetCategoryUid}
         targetPid = {$plugin.tx_ttcontenttotxnews.settings.targetPid}
