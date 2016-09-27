@@ -10,25 +10,25 @@
  * "version" and "dependencies" must not be touched!
  ***************************************************************/
 
-$EM_CONF[$_EXTKEY] = array(
-	'title' => 'tt_content to tx_news converter',
-	'description' => 'tt_content to tx_news converter',
-	'category' => 'plugin',
-	'author' => 'Cedric Ziel',
-	'author_email' => 'cedric@cedric-ziel.com',
-	'state' => 'alpha',
-	'internal' => '',
-	'uploadfolder' => '0',
-	'createDirs' => '',
-	'clearCacheOnLoad' => 0,
-	'version' => '',
-	'constraints' => array(
-		'depends' => array(
-			'typo3' => '6.2',
-		),
-		'conflicts' => array(
-		),
-		'suggests' => array(
-		),
-	),
-);
+$EM_CONF[$_EXTKEY] = [
+    'title' => 'tt_content to tx_news converter',
+    'description' => 'tt_content to tx_news converter',
+    'category' => 'plugin',
+    'author' => 'Cedric Ziel',
+    'author_email' => 'cedric@cedric-ziel.com',
+    'state' => 'alpha',
+    'internal' => '',
+    'uploadfolder' => '0',
+    'createDirs' => '',
+    'clearCacheOnLoad' => 0,
+    'version' => '',
+    'constraints' => [
+        'depends' => [
+            'typo3' => '6.2',
+        ],
+        'conflicts' => [
+        ],
+        'suggests' => [
+        ],
+    ],
+];

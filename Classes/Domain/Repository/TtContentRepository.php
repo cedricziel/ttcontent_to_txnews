@@ -34,20 +34,21 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
  * Date: 31.08.14
  * Time: 19:35
  */
-class TtContentRepository extends Repository {
+class TtContentRepository extends Repository
+{
 
-	/**
-	 * @param int $pidOfOperation
-	 *
-	 * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
-	 */
-	public function findByPid($pidOfOperation) {
+    /**
+     * @param int $pidOfOperation
+     *
+     * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
+     */
+    public function findByPid($pidOfOperation)
+    {
+        $query = $this->createQuery();
+        $query->getQuerySettings()->setRespectStoragePage(false);
 
-		$query = $this->createQuery();
-		$query->getQuerySettings()->setRespectStoragePage(FALSE);
-
-		return $query->matching(
-			$query->equals('pid', $pidOfOperation)
-		)->execute();
-	}
+        return $query->matching(
+            $query->equals('pid', $pidOfOperation)
+        )->execute();
+    }
 }

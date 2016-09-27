@@ -1,5 +1,6 @@
 <?php
 namespace CedricZiel\TtcontentToTxnews\Service;
+
 use TYPO3\CMS\Backend\Utility\IconUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -28,46 +29,47 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-class ContextMenuOptions {
+class ContextMenuOptions
+{
 
-	/**
-	 * Adds a sample item to the CSM
-	 *
-	 * @param \TYPO3\CMS\Backend\ClickMenu\ClickMenu $parentObject Back-reference to the calling object
-	 * @param array $menuItems                                     Current list of menu items
-	 * @param string $table                                        Name of the table the clicked on item belongs to
-	 * @param integer $uid                                         Id of the clicked on item
-	 *
-	 * @return array Modified list of menu items
-	 */
-	public function main(\TYPO3\CMS\Backend\ClickMenu\ClickMenu $parentObject, $menuItems, $table, $uid) {
+    /**
+     * Adds a sample item to the CSM
+     *
+     * @param \TYPO3\CMS\Backend\ClickMenu\ClickMenu $parentObject Back-reference to the calling object
+     * @param array $menuItems                                     Current list of menu items
+     * @param string $table                                        Name of the table the clicked on item belongs to
+     * @param int $uid                                         Id of the clicked on item
+     *
+     * @return array Modified list of menu items
+     */
+    public function main(\TYPO3\CMS\Backend\ClickMenu\ClickMenu $parentObject, $menuItems, $table, $uid)
+    {
 
-		// Only activate for tt_content
-		if ('tt_content' === $table) {
-			$baseUrl = \TYPO3\CMS\Backend\Utility\BackendUtility::getModuleUrl(
-				'web_TtcontentToTxnewsTtconv',
-				array(
-					'tx_ttcontenttotxnews_web_examplesexamples[action]' => 'convert',
-					'tx_ttcontenttotxnews_web_examplesexamples[controller]' => 'TtContent',
-					'tx_ttcontenttotxnews_web_examplesexamples[ce]' => $uid,
-					'id' => GeneralUtility::_GP('id')
-				)
-			);
+        // Only activate for tt_content
+        if ('tt_content' === $table) {
+            $baseUrl = \TYPO3\CMS\Backend\Utility\BackendUtility::getModuleUrl(
+                'web_TtcontentToTxnewsTtconv',
+                [
+                    'tx_ttcontenttotxnews_web_examplesexamples[action]' => 'convert',
+                    'tx_ttcontenttotxnews_web_examplesexamples[controller]' => 'TtContent',
+                    'tx_ttcontenttotxnews_web_examplesexamples[ce]' => $uid,
+                    'id' => GeneralUtility::_GP('id')
+                ]
+            );
 
-			// Add new menu item with the following parameters:
-			// 1) Label
-			// 2) Icon
-			// 3) URL
-			// 4) = 1 disable item in docheader
-			$menuItems[] = $parentObject->linkItem(
-				$GLOBALS['LANG']->sL('LLL:EXT:ttcontent_to_txnews/Resources/Private/Language/locallang.xlf:be.csm.convertbutton'),
-				IconUtility::getSpriteIcon('actions-system-refresh'),
-				$parentObject->urlRefForCM($baseUrl),
-				1
-			);
+            // Add new menu item with the following parameters:
+            // 1) Label
+            // 2) Icon
+            // 3) URL
+            // 4) = 1 disable item in docheader
+            $menuItems[] = $parentObject->linkItem(
+                $GLOBALS['LANG']->sL('LLL:EXT:ttcontent_to_txnews/Resources/Private/Language/locallang.xlf:be.csm.convertbutton'),
+                IconUtility::getSpriteIcon('actions-system-refresh'),
+                $parentObject->urlRefForCM($baseUrl),
+                1
+            );
+        }
 
-		}
-
-		return $menuItems;
-	}
+        return $menuItems;
+    }
 }

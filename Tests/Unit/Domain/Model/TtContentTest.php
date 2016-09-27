@@ -34,24 +34,28 @@ namespace CedricZiel\TtcontentToTxnews\Tests\Unit\Domain\Model;
  *
  * @author Cedric Ziel <cedric@cedric-ziel.com>
  */
-class TtContentTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
-	/**
-	 * @var \CedricZiel\TtcontentToTxnews\Domain\Model\TtContent
-	 */
-	protected $subject = NULL;
+class TtContentTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
+{
+    /**
+     * @var \CedricZiel\TtcontentToTxnews\Domain\Model\TtContent
+     */
+    protected $subject = null;
 
-	protected function setUp() {
-		$this->subject = new \CedricZiel\TtcontentToTxnews\Domain\Model\TtContent();
-	}
+    protected function setUp()
+    {
+        $this->subject = new \CedricZiel\TtcontentToTxnews\Domain\Model\TtContent();
+    }
 
-	protected function tearDown() {
-		unset($this->subject);
-	}
+    protected function tearDown()
+    {
+        unset($this->subject);
+    }
 
-	/**
-	 * @test
-	 */
-	public function dummyTestToNotLeaveThisFileEmpty() {
-		$this->markTestIncomplete();
-	}
+    /**
+     * @test
+     */
+    public function dummyTestToNotLeaveThisFileEmpty()
+    {
+        $this->markTestIncomplete();
+    }
 }
