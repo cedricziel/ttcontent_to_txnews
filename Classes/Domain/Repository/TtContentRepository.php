@@ -15,6 +15,7 @@ namespace CedricZiel\TtcontentToTxnews\Domain\Repository;
  * The TYPO3 project - inspiring people to share!
  */
 
+use CedricZiel\TtcontentToTxnews\Domain\Model\TtContent;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
@@ -42,5 +43,28 @@ class TtContentRepository extends Repository
         );
 
         return $query->execute();
+    }
+
+    /**
+     * @param int $uid
+     *
+     * @return object|TtContent
+     */
+    public function findOneByUid($uid)
+    {
+        $query = $this->createQuery();
+
+        $query->getQuerySettings()
+            ->setRespectStoragePage(false)
+            ->setRespectSysLanguage(false)
+            ->setIgnoreEnableFields(true);
+
+        $query->matching(
+            $query->equals('uid', $uid)
+        );
+
+        return $query
+            ->execute()
+            ->getFirst();
     }
 }
