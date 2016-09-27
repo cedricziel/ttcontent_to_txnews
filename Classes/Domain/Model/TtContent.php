@@ -65,6 +65,11 @@ class TtContent extends AbstractEntity
     protected $image;
 
     /**
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference>
+     */
+    protected $assets;
+
+    /**
      * @var int
      */
     protected $imagewidth;
@@ -412,6 +417,28 @@ class TtContent extends AbstractEntity
         }
 
         $this->media = $media;
+    }
+
+    /**
+     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference>
+     */
+    public function getAssets()
+    {
+        return $this->media;
+    }
+
+    /**
+     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference> $media
+     *
+     * @return void
+     */
+    public function setAssets($assets)
+    {
+        if (null === $this->media) {
+            $this->assets = new ObjectStorage();
+        }
+
+        $this->assets = $assets;
     }
 
     /**
