@@ -24,7 +24,7 @@ if (TYPO3_MODE === 'BE') {
     );
 
     $GLOBALS['TBE_MODULES_EXT']['xMOD_alt_clickmenu']['extendCMclasses'][] = [
-        'name' => 'CedricZiel\\TtcontentToTxnews\\Service\\ContextMenuOptions'
+        'name' => \CedricZiel\TtcontentToTxnews\Backend\ContextMenuOptions::class,
     ];
 }
 
