@@ -8,6 +8,9 @@
         <tr>
             <th>Header</th>
             <th>CType</th>
+            <th>Assets</th>
+            <th>Media</th>
+            <th>Image</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -24,6 +27,15 @@
                 </td>
                 <td class="nowrap">
                     {ce.CType}
+                </td>
+                <td class="nowrap">
+                    {ce.assets -> f:count()}
+                </td>
+                <td class="nowrap">
+                    {ce.media -> f:count()}
+                </td>
+                <td class="nowrap">
+                    {ce.image -> f:count()}
                 </td>
                 <td align="right" class="nowrap">
                     <f:link.action
