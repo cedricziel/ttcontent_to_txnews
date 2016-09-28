@@ -68,7 +68,8 @@ class TtContentToNewsConverter
 
         $newsRecord->setTitle('CONVERTED: '.$ce->getHeader());
         $newsRecord->setBodytext($ce->getBodytext());
-        $newsRecord->setDatetime($ce->getTstamp());
+        $dateTime = new \DateTime("@{$ce->getCrdate()}");
+        $newsRecord->setDatetime($dateTime);
         $newsRecord->setCrdate($ce->getCrdate());
 
         if (null !== $ce->getImage()) {
