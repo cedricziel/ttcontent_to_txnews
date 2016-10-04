@@ -18,8 +18,6 @@ namespace CedricZiel\TtcontentToTxnews\Controller;
 use CedricZiel\TtcontentToTxnews\Domain\Model\TtContent;
 use CedricZiel\TtcontentToTxnews\Domain\Repository\TtContentRepository;
 use CedricZiel\TtcontentToTxnews\Service\TtContentToNewsConverter;
-use GeorgRinger\News\Domain\Repository\CategoryRepository;
-use GeorgRinger\News\Domain\Repository\FileRepository;
 use GeorgRinger\News\Domain\Repository\NewsRepository;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -114,7 +112,7 @@ class TtContentController extends ActionController
      */
     public function listAction()
     {
-        $ttContents = $this->ttContentRepository->findByPid((int) $this->pidOfOperation);
+        $ttContents = $this->ttContentRepository->findByPid((int)$this->pidOfOperation);
         $this->view->assignMultiple(
             [
                 'ttContents' => $ttContents,
@@ -125,10 +123,7 @@ class TtContentController extends ActionController
 
     public function initializeConvertAction()
     {
-        $contentElementUid = $this->request->getArgument('ce');
-        $contentElement = $this->ttContentRepository->findOneByUid((int) $contentElementUid);
-
-        $this->request->setArgument('ce', $contentElement);
+        $this->retrieveContentElementFromRequest();
     }
 
     /**
@@ -136,12 +131,18 @@ class TtContentController extends ActionController
      */
     public function convertAction(TtContent $ce)
     {
-        $newsRecord = $this->ttContentConverter->convertSingleEntity($ce);
+        $newsRecord = $this->ttContentConverter->convertSingleEntity(
+            $ce,
+            [
+                'targetCategoryUid' => $this->settings['targetCategoryUid'],
+                'targetPid'         => $this->pidOfOperation,
+            ]
+        );
 
         $this->newsRepository->add($newsRecord);
 
         $this->addFlashMessage(
-            'Record ' . $newsRecord->getTitle() . ' migrated',
+            'Record '.$newsRecord->getTitle().' migrated',
             'Success!',
             FlashMessage::OK
         );
@@ -149,18 +150,26 @@ class TtContentController extends ActionController
         $this->persistenceManager->persistAll();
 
         if (null !== $this->settings['backupPid'] && '' !== $this->settings['backupPid']) {
-            $ce->setPid((int) $this->settings['backupPid']);
+            $ce->setPid((int)$this->settings['backupPid']);
             $this->ttContentRepository->update($ce);
 
             $this->persistenceManager->persistAll();
 
             $this->addFlashMessage(
-                'Record ' . $ce->getHeader() . ' moved',
+                'Record '.$ce->getHeader().' moved',
                 'Success!',
                 FlashMessage::INFO
             );
         }
 
         $this->redirect('list');
+    }
+
+    protected function retrieveContentElementFromRequest()
+    {
+        $contentElementUid = $this->request->getArgument('ce');
+        $contentElement = $this->ttContentRepository->findOneByUid((int)$contentElementUid);
+
+        $this->request->setArgument('ce', $contentElement);
     }
 }
